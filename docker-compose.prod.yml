@@ -1,14 +1,12 @@
-version: '3.8'
-
 services:
   web:
     build:
-      context: ./app
+      context: ./devsearch
       dockerfile: Dockerfile.prod
     command: gunicorn devsearch.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
+      - static_volume:/home/devsearch/web/staticfiles
+      - media_volume:/home/devsearch/web/mediafiles
     expose:
       - 8000
     env_file:
@@ -24,8 +22,8 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
+      - static_volume:/home/devsearch/web/staticfiles
+      - media_volume:/home/devsearch/web/mediafiles
     ports:
       - 1337:80
     depends_on:
