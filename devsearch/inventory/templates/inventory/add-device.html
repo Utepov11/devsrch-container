@@ -1,0 +1,61 @@
+{% extends 'inventory/base.html' %}
+
+{% block topic %}
+    <div class="header-container">
+        <h5>Добавить устройство</h5>
+    </div>
+{% endblock %}
+
+{% block content%}
+    <div class="mb-3">
+        <label for="deviceType" class="form-label">Выберите тип устройства</label>
+        <select id="deviceType" class="form-select">
+            <option value="">-- Выберите тип --</option>
+            <option value="computer">Компьютер</option>
+            <option value="printer">Принтер</option>
+            <option value="accessory">Периферия</option>
+        </select>
+    </div>
+
+    <!-- Форма для компьютеров -->
+    <form id="computerForm" class="hidden" method="post">
+        {% csrf_token %}
+        {{ computer_form.as_p }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+
+    <!-- Форма для принтеров -->
+    <form id="printerForm" class="hidden" method="post">
+        {% csrf_token %}
+        {{ printer_form.as_p }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+
+    <!-- Форма для периферии -->
+    <form id="accessoryForm" class="hidden" method="post">
+        {% csrf_token %}
+        {{ accessory_form.as_p }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+    
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $('#id_printer_type').select2({
+        theme: "bootstrap-5",
+    } );
+    $('#id_computer_type').select2({
+        theme: "bootstrap-5",
+    } );
+</script>
+{% endblock %}

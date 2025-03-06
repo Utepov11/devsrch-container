@@ -1,0 +1,20 @@
+{% extends 'inventory/base.html' %}
+
+{% block topic %}
+    <div class="header-container">
+        <h5>Сохраненные отчёты</h5>
+    </div>
+{% endblock %}
+
+{% block content%}
+    <ul>
+        {% for report in reports %}
+            <li>
+                {{ report.report_name }} ({{ report.generated_at }}): 
+                <a href="{{ report.file_path }}" download>Скачать</a>
+            </li>
+        {% empty %}
+            <li>Нет доступных отчётов.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

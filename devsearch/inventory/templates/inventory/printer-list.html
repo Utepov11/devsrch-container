@@ -1,0 +1,101 @@
+{% extends 'inventory/base.html' %}
+
+{% block topic %}
+  <div class="header-container d-flex align-items-center justify-content-between">
+    <h5>Список принтеров и сканеров</h5>
+    <!-- Поиск устройств -->
+    <div class="search-group d-flex align-items-center" style="gap: 1rem;">
+      <form method="get">
+        <div class="input-group" style="width: 250px;">
+          <input type="text" class="form-control" name="query" value="{{ query }}" placeholder="Поиск устройства" aria-describedby="button-addon2" />
+          <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+      <!-- Отчёт -->
+      <button class="btn btn-success" type="submit">
+        <a href="/export_printers_xls" class="download-list">Отчёт XLS</a>
+      </button>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content%}
+  <!-- Таблица устройств -->
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Тип устройства</th>
+        <th scope="col">Инвентарный код</th>
+        <th scope="col">Серийный номер</th>
+        <th scope="col" style=" vertical-align: middle;">
+          <div style="display: inline-flex; align-items: center;">
+            <span>Расположение</span>
+            <div class="dropdown">
+              <button type="button" data-bs-toggle="dropdown" title="Фильтр" style="border: none; background: none; padding: 0; color: inherit;">
+                <i class="bi bi-funnel"></i>
+              </button>
+              <!-- Выпадающее меню Расположение -->
+              <ul class="dropdown-menu">
+                {% for loc in locations %}
+                <li><a class="dropdown-item" href="?location={{ loc }}">{{ loc }}</a></li>
+                {% endfor %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'computers' %}">Сброс</a></li>
+              </ul>
+            </div>
+          </div>
+        </th>
+        <th scope="col">Добавил</th>
+        <th scope="col">Дата добавления</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for printer in printers %}
+      <tr>
+        <td>{{ printer.printer_type }}</td>
+        <td>{{ printer.printer_inventory }}</td>
+        <td>{{ printer.printer_snumber }}</td>
+        <td>{{ printer.printer_location }}</td>
+        <td>{{ printer.printer_author.username }}</td>
+        <td style="color: gray;">{{ printer.printer_date }}</td>
+        <td>
+          <!-- Кнопки редактирования и удаления -->
+          {% load custom_filters %}
+          {% if user|belongs_to_group:"Editor" or user|belongs_to_group:"Admin" %}
+          <li class="list-inline-item">
+            <a href="{% url 'printer-update' printer.slug %}"><button class="btn btn-warning btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Исправить"><i class="bi bi-pencil-square"></i></button></a>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn btn-danger btn-sm rounded-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Удалить"><i class="bi bi-trash-fill"></i></button>
+          </li>
+          {% endif %}
+        </td>
+      </tr>
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Удалить устройство?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+              <form action="{% url 'printer-delete' printer.slug %}" method="post">
+              {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Удалить</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <tr>
+        <td colspan="1">Ничего не найдено</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

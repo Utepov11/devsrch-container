@@ -1,0 +1,33 @@
+{% extends 'inventory/base.html' %}
+
+{% block topic %}
+    <div class="header-container">
+        <h5>Инструменты</h5>
+    </div>
+{% endblock %}
+
+{% block content%}
+    {% load custom_filters %}
+    {% if user|belongs_to_group:"Editor" or user|belongs_to_group:"Admin" %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h5 class="card-title">Добавить устройство</h5>
+                    <p class="card-text">---</p>
+                    <a href="{% url 'add-device' %}" class="btn btn-primary">Добавить</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h5 class="card-title">---</h5>
+                    <p class="card-text">---</p>
+                    <a href="#" class="btn btn-primary">---</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
