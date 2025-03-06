@@ -1,17 +1,17 @@
-# Используем минимальный образ Python
-FROM python:3.12.8-alpine
+# pull official base image
+FROM python:3.9.6-alpine
 
-# Устанавливаем переменные окружения
+# set work directory
+WORKDIR /usr/src/app
+
+# set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Устанавливаем рабочую директорию
-WORKDIR /app
-
+# install dependencies
+RUN pip install --upgrade pip
 COPY ./requirements.txt .
+RUN pip install -r requirements.txt
 
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt && \
+# copy project
 COPY . .
-
-EXPOSE 8000
