@@ -2,7 +2,7 @@ services:
   web:
     build:
       context: ./devsearch
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     command: gunicorn devsearch.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/devsearch/web/staticfiles
