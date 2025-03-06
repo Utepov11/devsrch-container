@@ -1,22 +1,23 @@
-# pull official base image
+# Используем минимальный образ Python
 FROM python:3.12.8-alpine
 
-# set work directory
+# Устанавливаем рабочую директорию
 WORKDIR /app
-COPY ./devsearch /app
 
-# set environment variables
+# Устанавливаем переменные окружения
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install psycopg2 dependencies
-RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
+# Устанавливаем зависимости для psycopg2
+RUN apk update && apk add --no-cache \
+    postgresql-dev gcc python3-dev musl-dev
 
-# install dependencies
-RUN pip install --upgrade pip
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+# Устанавливаем pip-зависимости
+COPY devsearch/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# copy project
-COPY . .
+# Копируем весь проект
+COPY devsearch /app
+
+# Указываем команду запуска Django
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
