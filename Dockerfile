@@ -2,7 +2,8 @@
 FROM python:3.12.8-alpine
 
 # set work directory
-WORKDIR /devsearch
+WORKDIR /app
+COPY ./devsearch /app
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
