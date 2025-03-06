@@ -10,18 +10,19 @@ WORKDIR /app
 
 COPY ./requirements.txt .
 
-# Устанавливаем pip-зависимости
-RUN apt-get update && \
-    apt-get install -y \
+# Устанавливаем зависимости
+RUN apk add --no-cache \
       gcc \
-      default-libmysqlclient-dev \
-      pkg-config \
+      musl-dev \
+      mariadb-connector-c-dev \
+      libffi-dev \
       curl && \
     pip install --no-cache-dir -r requirements.txt && \
-    apt-get remove -y \
+    apk del \
       gcc \
-      pkg-config && \
-    rm -rf /var/lib/apt/lists/*
+      musl-dev \
+      mariadb-connector-c-dev \
+      libffi-dev
 
 COPY . .
 
