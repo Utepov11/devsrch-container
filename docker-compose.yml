@@ -8,6 +8,8 @@ services:
       - 8000:8000
     env_file:
       - ./.env.dev
+    context: .
+    dockerfile: Dockerfile
 
   db:
     image: postgres:13.0-alpine
